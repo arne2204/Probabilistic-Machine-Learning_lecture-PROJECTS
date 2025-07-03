@@ -1,33 +1,44 @@
-import pandas as pd
-import json
-from pathlib import Path
+from basic_functions import *
+
+df_raw = data_load("data/mz2010_cf.csv")
+
+#renaming all columns
+df_selection = select_rename("data/mappings.json",df_raw)
+df_selection = normalize_missing_values(df_selection)
+
+# applying label mappings for certain columns
+df_labels = apply_label_mappings_string(df_selection, "data/mappings.json")
+#normalize zero values to NaN and drop them
+df_selection = delete_na(df_selection)
+
+#drop 50 (self employed farmer),90 (no income),99 (not specified) from income
+df_selection = filter_income(df_selection, ["50","90","99"])
+
+df_selection, encoder_mapping = encode_categorical_features(df_selection)
+
+#train-test-split
+from sklearn.model_selection import train_test_split
+
+X = df_selection.drop(columns=["income"]).copy()
+y = df_selection["income"].copy()
+
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=42)
+
+print("Train:", X_train.shape, "Test:", X_test.shape)
 
 
-base_path = Path(__file__).resolve().parent.parent
 
-df = pd.read_csv(base_path/"data"/"mz2010_cf.csv", sep=';', header=0, low_memory=False)
+# saving data
 
+df_dict={"X_train.csv": X_train,
+            "X_test.csv": X_test,
+            "y_train.csv": y_train,
+            "y_test.csv": y_test,
+            "df_labels.csv": df_labels}
 
-with open(base_path/"notebooks"/"mappings.json", "r") as f:
-    mappings = json.load(f)
+for key in df_dict:
+    path = "data/" + key
+    save_df(df_dict[key], path)
 
-selected_features = mappings["features"]
-df = df[selected_features].copy()
-df.rename(columns=mappings["feature_names"], inplace=True)
-
-
-# transforming df for better understanding
-
-df_labels = df.copy()
-
-for column in df_labels.columns:
-    if column in mappings:
-        df_labels[column] = df_labels[column].map(mappings[column])
-
-
-
-#saving df with and without numerical feature values.
-
-df = df.apply(pd.to_numeric, errors="coerce")
-df.to_csv(base_path/"data"/"data.csv", sep = ";", index = False)
-df_labels.to_csv(base_path/"data"/"data_labels.csv", sep = ";", index = False)
+# Store label encodings for reverse lookup and interpretation
+save_dictionary(encoder_mapping, "data/encoder_mapping.json")
