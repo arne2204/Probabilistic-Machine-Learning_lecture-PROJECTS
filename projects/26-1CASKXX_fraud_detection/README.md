@@ -37,7 +37,13 @@ We explore:
 │    ├── 04_Logistic_Regression_Bayesian.ipynb
 │    └── 05_Model_Comparison.ipynb
 │
+├── results/
+│    ├── class_distribution.png
+│    └── imgs...
+│
 ├── README.md
+├── report.ipynb
+├── feedback.ipynb
 └── requirements.txt
 ```
 
