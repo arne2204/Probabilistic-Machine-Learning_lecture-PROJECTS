@@ -139,6 +139,8 @@ venv*/
 *venv*
 
 
+*.vscode*# Visual Studio Code settings
+*.vscode*/
 # Spyder project settings
 .spyderproject
 .spyproject

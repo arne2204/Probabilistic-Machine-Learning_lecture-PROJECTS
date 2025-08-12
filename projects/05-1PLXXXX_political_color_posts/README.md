@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This project investigates the classification of Instagram posts from major German political parties based on their dominant colors. A dataset of approximately 28,500 publicly available Instagram posts, collected from the inception of each party's account up to December 18, 2024, was utilized. For each image, the four most dominant colors were extracted and transformed into compact feature vectors. These features were then used to train various classifiers. The study aimed to assess the effectiveness of simple visual features like dominant colors in distinguishing between political parties and to understand how different feature representations and preprocessing strategies impact classification performance. The analysis involved evaluating different color spaces, incorporating temporal information, and applying selective data filtering to optimize model accuracy.
+This project explores the classification of Instagram posts from major political parties in Germany using dominant image colors as visual features. A dataset of approximately 28,500 publicly available posts was collected, covering the entire period from the creation of each party's account until December 18, 2024. For each image, the four most dominant colors were extracted and converted into compact feature representations. These color-based features served as input for various classification models. The study investigates whether such simple visual cues can effectively differentiate between political parties. In addition, it examines how different color spaces, temporal context, and specific preprocessing techniques influence the overall classification performance.
 
 ## How to Use This Repository
 
