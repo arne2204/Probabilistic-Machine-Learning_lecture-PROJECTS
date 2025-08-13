@@ -1,9 +1,10 @@
 from basic_functions import *
 
 df_raw = data_load("data/mz2010_cf.csv")
-
+print(df_raw["EF739"].unique())
 #renaming all columns
 df_selection = select_rename("data/mappings.json",df_raw)
+print(df_selection["job"].unique())
 df_selection = normalize_missing_values(df_selection)
 
 # applying label mappings for certain columns
@@ -14,7 +15,6 @@ df_selection = delete_na(df_selection)
 #drop 50 (self employed farmer),90 (no income),99 (not specified) from income
 df_selection = filter_income(df_selection, ["50","90","99"])
 
-df_selection, encoder_mapping = encode_categorical_features(df_selection)
 
 #train-test-split
 from sklearn.model_selection import train_test_split
@@ -39,6 +39,3 @@ df_dict={"X_train.csv": X_train,
 for key in df_dict:
     path = "data/" + key
     save_df(df_dict[key], path)
-
-# Store label encodings for reverse lookup and interpretation
-save_dictionary(encoder_mapping, "data/encoder_mapping.json")

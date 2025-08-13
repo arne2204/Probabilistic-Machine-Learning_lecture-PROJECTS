@@ -110,30 +110,6 @@ def apply_label_mappings_int(dataframe, mapping_dict_path):
 
     return dataframe
 
-# encoding categorical features for model compatibility
-
-from sklearn.preprocessing import LabelEncoder
-
-def encode_categorical_features(dataframe):
-    encoders = {}
-    df_encoded = dataframe.astype("int64").copy()
-    
-    for column in df_encoded.columns:
-        le = LabelEncoder()
-        df_encoded[column] = le.fit_transform(df_encoded[column])
-        encoders[column] = le
-    
-    encoder_mapping = {
-        col: [str(val) for val in le.classes_]
-        for col, le in encoders.items()
-    }
-    encoder_mapping_dict = {
-        col: {i: str(val) for i, val in enumerate(le.classes_)}
-        for col, le in encoders.items()
-    }
-
-    return df_encoded, encoder_mapping_dict
-
 
 # save dictionary
 
