@@ -1,46 +1,29 @@
-Project Report - Football Analytics
-Abstract
+# Project Report – Football Analytics: Probabilistic Modelling of Expected Goals
 
+## Abstract
+This repository contains the results and materials for a Probabilistic Machine Learning project on **expected goals (xG) modelling in football**.  
+The project compares Logistic Regression (LR), Bayesian Logistic Regression (BLR), and Bayesian Neural Networks (BNN) for predicting goal probabilities, with emphasis on **probability calibration** and **predictive uncertainty quantification**.
 
-This repository contains the results and related materials for the Probabilistic Machine Learning project.
+The complete methodology, experiments, and analyses can be found in the in the notebooks folder.
 
-The core of this project, including a comprehensive description of the methodology, detailed results, and analyses, is presented in a Jupyter Notebook.
+Within the notebooks, all relevant datasets and scripts are linked for reproducibility.
 
-To access the full project details and results, please navigate to the results folder and open the project_report_lukas_pasold.ipynb notebook.
+## Project Structure
+- **`results/`** – Main project report notebook (`project_report_lukas_pasold.ipynb`) and generated visualisations/tables.  
+- **`notebooks/`** – Experimental notebooks and scripts for preprocessing, training, and evaluation.  
+- **`data/`** – Processed datasets in `.csv` format (original datasets not included; links provided in the notebook).  
 
-Within this notebook, all other necessary data and code files used in the project are linked. You can easily access and review these files by clicking on the respective links within the notebook.
-Project Structure
+## Data Sources
+Data are derived from publicly available football event datasets freely provided by StatsBomb Sources and preprocessing steps are documented in the report and the notebooks.
 
-    results/: This directory contains the main project report notebook (project_report_lukas_pasold.ipynb) and any generated visualizations or output data.
+## Getting Started
+**1. Clone the Repository**
+```bash
+git clone https://github.com/IvaroEkel/Probabilistic-Machine-Learning_lecture-PROJECTS.git
+cd Probabilistic-Machine-Learning_lecture-PROJECTS
 
-    notebooks/: This directory contains scripts and notebooks used for data collection, processing and classification.
+## Dependencies
 
-    data/: This directory contains the processed image data as .csv files. Due to the size constraints, the full image dataset is not directly included but links to the original sources are provided.
-
-Data Sources
-
-
-
-Getting Started
-
-Clone the Repository:
-
-git clone https://github.com/IvaroEkel/Probabilistic-Machine-Learning_lecture-PROJECTS.git cd XX   
-
-    Open the Notebook:
-
-    GitHub: You can view the notebook directly on GitHub, though you won't be able to run the code.
-
-    Google Colab: The most convenient way to run the notebook is often through Google Colab. Look for a "Open in Colab" badge or link within the notebook's GitHub preview.
-
-    Jupyter Notebook/JupyterLab (Local): If you prefer to work locally, you'll need to have Jupyter installed. If you don't, you can install it via pip.
-
-Dependencies
-
-The project relies on standard Python libraries for data manipulation, machine learning, and visualization. Please refer to the requirements.txt.
-
-It is recommended to create a virtual environment for the project:
-
-python -m venv venv
-source venv/bin/activate  # On Windows: `venv\Scripts\activate`
-pip install -r requirements.txt 
+You do not need to set up a virtual environment to explore this project.  
+The notebooks can be opened interactively in **Google Colab** directly from the GitHub repository, allowing you to run all code without installing anything locally.  
+Alternatively, you can clone the repository and open the notebooks in Jupyter Notebook or JupyterLab if you prefer to run them on your own machine.
