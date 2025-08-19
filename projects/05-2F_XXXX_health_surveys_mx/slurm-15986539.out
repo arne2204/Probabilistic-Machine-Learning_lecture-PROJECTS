@@ -1,0 +1,487 @@
+/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/causal_env_py39/lib64/python3.9/site-packages/networkx/utils/backends.py:135: RuntimeWarning: networkx backend defined more than once: nx-loopback
+  backends.update(_get_backends("networkx.backends"))
+INFO:src.pipeline:============================================================
+INFO:src.pipeline:STARTING ENHANCED ENSIN DATA PREPROCESSING PIPELINE
+INFO:src.pipeline:============================================================
+INFO:src.pipeline:Loading data from ~/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/data/adultos_ensanut2023_w_n.csv
+INFO:src.pipeline:Data loaded successfully. Shape: (5569, 758)
+INFO:src.pipeline:Data Quality Report:
+INFO:src.pipeline:  Shape: (5569, 758)
+INFO:src.pipeline:  Missing values: 0.00%
+INFO:src.pipeline:  Duplicate rows: 0
+INFO:src.pipeline:  High cardinality columns: 5
+INFO:src.pipeline:  Constant columns: 119
+INFO:src.pipeline:  Mandatory columns present: 28/28
+INFO:src.pipeline:Handling missing values...
+INFO:src.pipeline:Missing values after handling: 0
+INFO:src.pipeline:Detecting and handling outliers using iqr method...
+INFO:src.pipeline:Handled 13904 outliers using iqr
+INFO:src.pipeline:Performing advanced feature engineering...
+INFO:src.pipeline:Added 6 engineered features
+INFO:src.pipeline:Normalizing and discretizing features...
+WARNING:src.pipeline:Could not discretize resultado_1: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize tiempo2: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize resultado_2: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize tiempo3: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize resultado_3: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize tiempo4: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize resultado_4: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize sexo: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize h0406: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize asexo: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota014: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota015: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota016: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0211: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0212: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0213: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0214: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0215: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0216: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0217: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota017: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota018: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0301a: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0301: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota019: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota020: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0401: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0409: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota021: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota037: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0502a: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0502b: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0502c: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0502d: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota022: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota023: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0601a: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0601b: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0601c: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0603: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0604: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0606: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota024: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota025: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a07her: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0701p: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0702p: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0703p: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0701m: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0702m: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a0703m: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota030: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota001: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1001f: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1001f1: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota002: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1101: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota003: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota004: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1201: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1210: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1211: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1213: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota005: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota006: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize a1301: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize nota007: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize completa: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize estrato: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize chronic_disease_count: Bin labels must be one fewer than the number of bin edges
+WARNING:src.pipeline:Could not discretize dietary_quality_score: Bin labels must be one fewer than the number of bin edges
+INFO:src.pipeline:Performing intelligent feature selection...
+INFO:src.pipeline:Removed 714 constant/near-constant columns
+INFO:src.pipeline:Removed 5 high-cardinality columns
+INFO:src.pipeline:Removed 1 highly correlated columns
+INFO:src.pipeline:Computing mutual information scores...
+INFO:src.pipeline:Top 5 features for a1503:
+INFO:src.pipeline:  edad: 0.5395
+INFO:src.pipeline:  fech_nac: 0.1615
+INFO:src.pipeline:  a0401: 0.0748
+INFO:src.pipeline:  a0302: 0.0651
+INFO:src.pipeline:  a0404a: 0.0568
+WARNING:src.pipeline:Could not compute mutual information for a1210: Unknown label type: continuous. Maybe you are trying to fit a classifier, which expects discrete classes on a regression target with continuous values.
+WARNING:src.pipeline:Could not compute mutual information for a0301: Unknown label type: continuous. Maybe you are trying to fit a classifier, which expects discrete classes on a regression target with continuous values.
+INFO:src.pipeline:Preparing data for Bayesian network...
+INFO:src.pipeline:Final dataset shape: (5569, 59)
+INFO:src.pipeline:Data types: {CategoricalDtype(categories=[' ', '1', '2'], ordered=False): 7, CategoricalDtype(categories=['low', 'medium', 'high'], ordered=True): 3, CategoricalDtype(categories=[0.0, 0.5, 1.0], ordered=False): 3, CategoricalDtype(categories=[0.0, 0.125, 1.0], ordered=False): 3, CategoricalDtype(categories=['01/09/2023', '01/10/2023', '01/11/2023', '02/09/2023',
+                  '02/11/2023', '03/09/2023', '03/10/2023', '03/11/2023',
+                  '04/10/2023', '04/11/2023', '05/10/2023', '05/11/2023',
+                  '06/09/2023', '06/10/2023', '07/09/2023', '07/10/2023',
+                  '08/09/2023', '08/10/2023', '09/09/2023', '09/10/2023',
+                  '09/11/2023', '10/08/2023', '10/09/2023', '10/10/2023',
+                  '10/11/2023', '11/08/2023', '11/09/2023', '11/10/2023',
+                  '11/11/2023', '12/08/2023', '12/09/2023', '12/10/2023',
+                  '12/11/2023', '13/08/2023', '13/09/2023', '13/10/2023',
+                  '13/11/2023', '14/09/2023', '14/10/2023', '14/11/2023',
+                  '15/08/2023', '15/09/2023', '15/10/2023', '15/11/2023',
+                  '16/08/2023', '16/09/2023', '16/10/2023', '16/11/2023',
+                  '17/08/2023', '17/09/2023', '17/10/2023', '17/11/2023',
+                  '18/08/2023', '18/09/2023', '18/10/2023', '18/11/2023',
+                  '19/08/2023', '19/09/2023', '19/10/2023', '19/11/2023',
+                  '20/08/2023', '20/09/2023', '20/10/2023', '20/11/2023',
+                  '21/09/2023', '21/10/2023', '21/11/2023', '22/08/2023',
+                  '22/09/2023', '22/10/2023', '22/11/2023', '23/08/2023',
+                  '23/09/2023', '23/10/2023', '23/11/2023', '24/08/2023',
+                  '24/09/2023', '24/10/2023', '25/08/2023', '25/09/2023',
+                  '25/10/2023', '26/08/2023', '26/09/2023', '26/10/2023',
+                  '27/08/2023', '27/09/2023', '27/10/2023', '28/08/2023',
+                  '28/09/2023', '28/10/2023', '29/08/2023', '29/09/2023',
+                  '29/10/2023', '30/08/2023', '30/09/2023', '30/10/2023',
+                  '31/08/2023', '31/10/2023'],
+, ordered=False): 3, CategoricalDtype(categories=[' ', '01/09/2023', '01/10/2023', '01/11/2023', '02/09/2023',
+                  '02/11/2023', '03/09/2023', '03/10/2023', '04/10/2023',
+                  '05/10/2023', '06/09/2023', '06/10/2023', '07/09/2023',
+                  '07/10/2023', '08/10/2023', '09/09/2023', '09/11/2023',
+                  '10/10/2023', '11/08/2023', '11/09/2023', '11/10/2023',
+                  '11/11/2023', '12/08/2023', '12/09/2023', '12/10/2023',
+                  '12/11/2023', '13/08/2023', '13/09/2023', '13/10/2023',
+                  '13/11/2023', '14/09/2023', '14/10/2023', '14/11/2023',
+                  '15/08/2023', '15/09/2023', '15/10/2023', '15/11/2023',
+                  '16/08/2023', '16/10/2023', '16/11/2023', '17/08/2023',
+                  '17/09/2023', '17/10/2023', '17/11/2023', '18/08/2023',
+                  '18/09/2023', '18/10/2023', '18/11/2023', '19/08/2023',
+                  '19/09/2023', '19/10/2023', '19/11/2023', '20/08/2023',
+                  '20/09/2023', '20/10/2023', '20/11/2023', '21/09/2023',
+                  '21/10/2023', '21/11/2023', '22/08/2023', '22/09/2023',
+                  '22/10/2023', '22/11/2023', '23/09/2023', '23/10/2023',
+                  '24/08/2023', '24/09/2023', '24/10/2023', '25/08/2023',
+                  '25/09/2023', '25/10/2023', '26/08/2023', '26/09/2023',
+                  '26/10/2023', '27/08/2023', '27/09/2023', '27/10/2023',
+                  '28/08/2023', '28/09/2023', '28/10/2023', '29/08/2023',
+                  '29/09/2023', '29/10/2023', '30/08/2023', '30/09/2023',
+                  '30/10/2023', '31/08/2023', '31/10/2023'],
+, ordered=False): 2, CategoricalDtype(categories=[0.0, 1.0], ordered=False): 2, CategoricalDtype(categories=[' ', '19990604', '20010317', '20011011', '20040712',
+                  '20041123', '20050602', '20060107', '20060223', '20060920',
+                  '20070613', '20070820', '20080822', '20081007', '20090216',
+                  '20090227', '20090314', '20091007', '20091120', '20100303',
+                  '20100313', '20101205', '20110317', '20110528', '20110701',
+                  '20120224', '20120523', '20120625', '20120803', '20130101',
+                  '20130323', '20130617', '20130716', '20130724', '20131109',
+                  '20140326', '20140624', '20140726', '20140901', '20141002',
+                  '20141210', '20150206', '20150609', '20151104', '20151212',
+                  '20160607', '20160629', '20160715', '20160824', '20160901',
+                  '20170208', '20170307', '20170310', '20171113', '20180109',
+                  '20180124', '20180208', '20180426', '20180518', '20181125',
+                  '20181128', '20190102', '20190115', '20190328', '20190502',
+                  '20190529', '20190716', '20191022', '20191105', '20191119',
+                  '20191205', '20191217', '20200117', '20200201', '20201029',
+                  '20210707', '20221118', '20230120', '20230123', '20230208',
+                  '20230321', '20230425', '20230621', '20230724', '20231010',
+                  '20231024'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '19951020', '19990825', '20000704', '20011016',
+                  '20021010', '20021021', '20030217', '20031208', '20040101',
+                  '20040118', '20040518', '20040519', '20040628', '20040926',
+                  '20041004', '20041122', '20050420', '20050910', '20050924',
+                  '20051023', '20060421', '20060615', '20060809', '20060811',
+                  '20060812', '20061012', '20061023', '20061113', '20070121',
+                  '20070210', '20070224', '20070519', '20070528', '20070716',
+                  '20070826', '20071127', '20080101', '20080214', '20080219',
+                  '20080222', '20080303', '20080312', '20080327', '20080402',
+                  '20080410', '20080416', '20080424', '20080512', '20080917',
+                  '20081010', '20081113', '20090212', '20091021', '20091207',
+                  '20100318', '20100527', '20100914', '20101110', '20110210',
+                  '20110308', '20110329', '20110404', '20110426', '20120225',
+                  '20121010', '20130308', '20130819', '20131017', '20140115',
+                  '20140128', '20140213', '20140712', '20151118', '20160313',
+                  '20160608', '20160806', '20160907', '20161215', '20170503',
+                  '20170511', '20180214', '20180814', '20200120', '20210513',
+                  '20211116', '20220323', '20220328', '20220716', '20221106',
+                  '20230528', '20230713', '20231017'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '19910303', '19991121', '20010730', '20010804',
+                  '20030908', '20031008', '20040122', '20040910', '20041016',
+                  ...
+                  '20230811', '20230815', '20230820', '20230901', '20230908',
+                  '20230919', '20230925', '20231021', '20231024', '20231101'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '19910202', '19950720', '19980216', '19980401',
+                  '19980416', '19991121', '20000118', '20010101', '20010215',
+                  ...
+                  '20230215', '20230217', '20230223', '20230319', '20230426',
+                  '20230605', '20230808', '20230815', '20230829', '20230912'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '19940309', '19970620', '19980518', '19980616',
+                  '20000126', '20000309', '20010518', '20010710', '20030402',
+                  '20040213', '20051013', '20060110', '20061115', '20070425',
+                  '20070427', '20070527', '20070528', '20070915', '20071118',
+                  '20080311', '20080410', '20081001', '20081010', '20090520',
+                  '20090717', '20090828', '20090929', '20091224', '20100322',
+                  '20100323', '20110116', '20110125', '20110315', '20110512',
+                  '20110612', '20110908', '20110926', '20111207', '20120803',
+                  '20120925', '20121023', '20130315', '20130410', '20130716',
+                  '20130725', '20130812', '20131029', '20131030', '20140128',
+                  '20140305', '20140428', '20140617', '20140801', '20141001',
+                  '20141119', '20150629', '20150912', '20160425', '20170119',
+                  '20170820', '20171113', '20180404', '20180406', '20180608',
+                  '20181019', '20190422', '20190525', '20191028', '20191128',
+                  '20210503', '20220831', '20221010', '20221226', '20230112',
+                  '20230803'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '20060905', '20070910', '20100128', '20100802',
+                  '20101118', '20120223', '20130121', '20130306', '20140210',
+                  '20140211', '20140324', '20140604', '20141008', '20141026',
+                  '20141103', '20141128', '20150311', '20150522', '20150810',
+                  '20160329', '20160609', '20161006', '20170225', '20170818',
+                  '20170825', '20171004', '20171012', '20180618', '20180814',
+                  '20181003', '20190108', '20190228', '20190304', '20190317',
+                  '20190322', '20190424', '20190521', '20190618', '20190712',
+                  '20190726', '20201002', '20201125', '20201228', '20210424',
+                  '20211117', '20211210', '20220114', '20220328', '20220420',
+                  '20220512', '20220525', '20220606', '20220628', '20220921',
+                  '20230201', '20230516', '20230908'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '20100307', '20110210', '20111201', '20120123',
+                  '20120127', '20130103', '20131023', '20131030', '20140108',
+                  ...
+                  '20230308', '20230314', '20230324', '20230819', '20230901',
+                  '20231013', '20231016', '20231017', '20231026', '20231113'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '20000506', '20040830', '20050509', '20051107',
+                  '20051219', '20060713', '20061024', '20061223', '20070213',
+                  '20070314', '20070717', '20080410', '20080822', '20080824',
+                  '20080913', '20080930', '20081028', '20090702', '20091230',
+                  '20100609', '20100620', '20101122', '20110224', '20111110',
+                  '20120305', '20121107', '20121122', '20121128', '20130226',
+                  '20131105', '20140328', '20140624', '20140912', '20141103',
+                  '20141119', '20151015', '20151019', '20151114', '20160428',
+                  '20160816', '20161111', '20170606', '20170614', '20171113',
+                  '20171201', '20171215', '20171220', '20180124', '20180208',
+                  '20181004', '20181113', '20181114', '20181117', '20181125',
+                  '20190202', '20190228', '20190720', '20190816', '20191010',
+                  '20191205', '20200406', '20200520', '20200528', '20200601',
+                  '20200817', '20200827', '20211121', '20211215', '20220929',
+                  '20221110', '20221123', '20221208', '20230116', '20230217',
+                  '20230515', '20230614', '20230710', '20230712', '20230803',
+                  '20230823', '20230920', '20231114'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '20011219', '20051213', '20061024', '20090627',
+                  '20091211', '20121110', '20141111', '20160617', '20171113',
+                  '20181129', '20181204', '20181211', '20191023', '20191204',
+                  '20191205', '20191210', '20191213', '20200107', '20201001',
+                  '20201008', '20201023', '20201126', '20210114', '20210802',
+                  '20210807', '20211026', '20211116', '20211117', '20211124',
+                  '20211125', '20211127', '20211128', '20211202', '20211213',
+                  '20211214', '20220110', '20220705', '20221003', '20221004',
+                  '20221005', '20221010', '20221011', '20221012', '20221013',
+                  '20221014', '20221017', '20221019', '20221024', '20221027',
+                  '20221028', '20221030', '20221031', '20221104', '20221108',
+                  '20221109', '20221110', '20221118', '20221120', '20221122',
+                  '20221124', '20221129', '20221201', '20221204', '20221205',
+                  '20221212', '20221215', '20221219', '20221222', '20230208',
+                  '20230713', '20231016', '20231020', '20231103'],
+, ordered=False): 1, CategoricalDtype(categories=['1000,23692582511', '100060,801282819', '10011,9087082381',
+                  '10016,2436665516', '100347,559247572', '10035,9147354376',
+                  '1006,1945291606', '10060,1571650485', '10060,4444455016',
+                  '10065,191095677',
+                  ...
+                  '9913,7662322905', '9944,68624040204', '9955,96917571128',
+                  '9957,67148288911', '996,672089557209', '9968,79719125724',
+                  '9973,66647963282', '9988,36103811633', '9991,55883859855',
+                  'NA'],
+, ordered=False): 1, CategoricalDtype(categories=[0.0, 0.125, 0.25, 0.875, 1.0], ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '1,225', '1,3', '1,5', '1,64', '1,75', '1,8',
+                  '1,815',
+                  ...
+                  '4,48', '4,5', '4,54', '4,55', '4,6', '4,62', '4,95',
+                  '4,989', '5', '9,999'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', ' CRIKO', 'ANFETAMINAS', 'ARCOIRIS', 'AZULES',
+                  'BOTONES', 'BOTONES AZULES', 'CHICHIPIL', 'COCAINA',
+                  'COCODRILE', 'COCODRILO', 'CRACK', 'CRAK', 'CRICO',
+                  'CRISTAL', 'CRISTAL. DROGA ESTETICA', 'CRITAL, FOCO',
+                  'CRYSTAL', 'DROGA', 'DROGA DE ZOMBI', 'DROGA SOMBI',
+                  'DROGA ZOMBI', 'DROGA ZOMBIE', 'DROGA ZOMBIS',
+                  'DROGA ZOOMBI', 'DROGA ZOOMNBIE', 'EL CALMANTE DEL BURRO',
+                  'EL CRISTAL', 'EL FOCO', 'EROINAA', 'FE', 'FENTALINO',
+                  'FENTANIL', 'FENTANILO', 'FOCO', 'FORANE', 'GOTAS', 'GRILLO',
+                  'HIELO', 'KRISTAL', 'LA DROGA DEL NOMBRE', 'LA DROGA ZOMBIE',
+                  'LCD', 'LUNEA', 'M30', 'M37', 'MARIGUANA', 'MDMA',
+                  'MODO SOMBI', 'N9 RECUERDA', 'NA', 'PASTILLA AZUL',
+                  'PASTILLA ZOMBIE', 'PASTILLAS', 'PIEDRA', 'POLVO',
+                  'POLVO BLANCO', 'SODA', 'SOLO FENTANILO', 'SOMNIFEROS',
+                  'TACHAS', 'VENENO PARA RATAS', 'ZOMBIE'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '0', '10', '11', '12', '13', '14', '15', '16', '17',
+                  '18', '19', '2', '20', '21', '22', '23', '24', '25', '26',
+                  '27', '28', '29', '3', '30', '31', '32', '34', '35', '37',
+                  '38', '39', '4', '40', '44', '45', '49', '5', '50', '6', '7',
+                  '8', '9', 'NA'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '   NINGUNO', ' BUENA ENCUESTA', ' COMPLETA',
+                  ' CONFIABLE', ' NI GUNO', ' NINGUNA', ' NINGUNO', ' NO',
+                  '#Í', '+', '.', '0',
+                  '10.01J DETECCION DE CANCER DE PROSTATA Y ES UNA MUJER',
+                  'AL SEÑOR LE AMPUTARON UNA PIERNA HACE 23 AÑOS',
+                  'AYUDA DE TRADUCTOR HABLA NAHUALT', 'B', 'BB', 'BIEN',
+                  'BUDNA ENTREVISTA', 'BUEN ENTEEVISTADO', 'BUENA',
+                  'BUENA ENCUESTA', 'BUENA ENCUESTA SIN NOMBRE COMPLETO',
+                  'BUENA ENCUESTA,',
+                  'BUENA ENCUESTA, RAPIDAPOR CUIDAR A UN BEBE',
+                  'BUENA ENTREVISTA', 'BUENA ENTREVISTA UN POCO RAPIDA',
+                  'BUENAE', 'BUENAS ENCUESTA', 'COM', 'COMPLETA',
+                  'COMUNICARSE CON EL EN SU VISITA 5564419985',
+                  'COMUNICARSE CON EL PAPÁ ANTES DE ASISTIR CONCERTAR CITA 5564419985',
+                  'CONFIABLE', 'DIABETES EN FAMILIA. DEPRESION IMPORTANTE',
+                  'EL ENTREVISTADO COMENTÓ QUE TIENE CARTILLA DE VACUNACIO,PERO NO LA ENCONTRO',
+                  'EL ENTREVISTADO ESTUVO UN POCO RENUENTE',
+                  'EL JOVENO NO QUIERE PARTICIPAR EN LAS MEDICIONES DE NUTRICION',
+                  'EN EL CENTRO DE SALUD HAY ESCASEZ DE ALIMENTOS Y PERSONAL MEDICO NO ES EFIC',
+                  'ENTREVISTA COMPLETA', 'ENTREVISTA CONFIABLE',
+                  'ENTREVISTADA DESCONFIADA', 'ENTREVISTADA MUY PARTICIPATIVA',
+                  'HACE 4 ,MESES DIAGNOSTICARON LA FIABETES',
+                  'HAY QUE GRITAR PARA QUE ESCUCHE',
+                  'HUBO ERROR EN EL CRONOMETRO',
+                  'INSISTE EN QUE VIVE SOLO PERO SE VIO UN MENOR DE EDAD EN EL DOMICILIO',
+                  'LA PERSONA SELECCIONADA NO SABE LEER',
+                  'LA PERSONA TIENE DISCAPACIDAD',
+                  'LA PUERTA ES COLOR VERDE NO NEGRA',
+                  'LA SEÑORA ES INCAPAZ  DE HACER MUCHAS COSAS',
+                  'LA SEÑORA SE LLAMA MARIA CELIA GARCIA VILLALPANDO',
+                  'LA SEÑORA TIENE ARTRITIS REUMATOIDE Y LE DAN TRATAMIENTO CADA MES',
+                  'ME PARECEN MUY BUENAS TODAS LAS PREGUNTAS, LAS RECOMIENDO AMPLIAMENTE',
+                  'MUY BUENA', 'N', 'N8NGUN', 'N9', 'NA', 'NI SIQUI', 'NIGUNO',
+                  'NIN', 'NING7NA', 'NINGUN9', 'NINGUNA', 'NINGUNAO',
+                  'NINGUNO', 'NINGUNOS', 'NINGÚN', 'NO', 'NO TIENE UN OIDO',
+                  'NUNGUNO', 'OK', 'PERFECTA', 'PERSINA MUY DISTRAIDA,',
+                  'QUE SIESBUENO Y OJALA SEA PARA ALGO PRODUCTIVO ,ANTE LA SOCIEDAD .',
+                  'SE ATIENCE DE LAS PIERNAS, HIPERTENSION, DOLORES EN EL PECHO Y LESION',
+                  'SE LEVANTO ENCUESTA EN CASA DE VECINO PORQ ESTABA WHI EL DUEÑO DE LA VIVIEN',
+                  'SE LEVANTO HOGAR COMPLETO EN LOCAL DE LA FAMILIA AL IGUAL QUE INDIVIDUALES',
+                  'SEÑOR DE LA TERCERA EDAD INCAPAZ DE MOVERSE',
+                  'SEÑORA TIENE DIFICULTAD PARA OIR PERO SI COMPRENDE LAS PREGUNTAS',
+                  'SI  COMENTARIOS', 'SIN COMENTARIOS',
+                  'SIN COMENTARIOS EN LA ENTREVISTA', 'SIN OBERVACIONES',
+                  'SOLO TUVO PRESION ALTA CUANDO ESTABA EMBARAZADA',
+                  'TIENE ARTRITIS Y MENTAL', 'TIENE HEMODIALISIS',
+                  'TIENE VACUBA COVID PERO NO ESTA REGISTRADO EN LA CARTILLA',
+                  'TODL BIEN', 'TODO BIEJ', 'TODO BIEM', 'TODO BIEN',
+                  'TODP BIEN', 'TUVO MICRO INFARTO CEREBRAL', 'U',
+                  'UN POCO RENUENTE', 'V'],
+, ordered=False): 1, CategoricalDtype(categories=['01/09/2023', '01/10/2023', '01/11/2023', '02/09/2023',
+                  '02/11/2023', '03/09/2023', '03/10/2023', '03/11/2023',
+                  '04/10/2023', '04/11/2023', '05/10/2023', '05/11/2023',
+                  '06/09/2023', '06/10/2023', '07/09/2023', '07/10/2023',
+                  '08/09/2023', '08/10/2023', '09/09/2023', '09/10/2023',
+                  '09/11/2023', '10/08/2023', '10/09/2023', '10/10/2023',
+                  '10/11/2023', '11/08/2023', '11/09/2023', '11/10/2023',
+                  '11/11/2023', '12/08/2023', '12/09/2023', '12/10/2023',
+                  '12/11/2023', '13/08/2023', '13/09/2023', '13/10/2023',
+                  '13/11/2023', '14/09/2023', '14/10/2023', '14/11/2023',
+                  '15/08/2023', '15/09/2023', '15/10/2023', '15/11/2023',
+                  '16/08/2023', '16/09/2023', '16/10/2023', '16/11/2023',
+                  '17/08/2023', '17/09/2023', '17/10/2023', '17/11/2023',
+                  '18/08/2023', '18/09/2023', '18/10/2023', '18/11/2023',
+                  '19/08/2023', '19/09/2023', '19/10/2023', '19/11/2023',
+                  '20/08/2023', '20/09/2023', '20/10/2023', '20/11/2023',
+                  '21/09/2023', '21/10/2023', '21/11/2023', '22/08/2023',
+                  '22/09/2023', '22/10/2023', '22/11/2023', '23/08/2023',
+                  '23/09/2023', '23/10/2023', '23/11/2023', '24/08/2023',
+                  '24/09/2023', '24/10/2023', '25/08/2023', '25/09/2023',
+                  '25/10/2023', '26/08/2023', '26/09/2023', '26/10/2023',
+                  '27/08/2023', '27/09/2023', '27/10/2023', '28/08/2023',
+                  '28/09/2023', '28/10/2023', '29/08/2023', '29/09/2023',
+                  '29/10/2023', '30/08/2023', '30/09/2023', '30/10/2023',
+                  '31/08/2023', '31/10/2023', 'NA'],
+, ordered=False): 1, CategoricalDtype(categories=['0100100013312', '0200400013107', '0300300011998',
+                  '0400300011155', '050020001306A', '0502500010619',
+                  '0503500014162', '0503500014482', '0601000010165',
+                  '070400000007A',
+                  ...
+                  '2501200001211', '2501200010069', '2501200010251',
+                  '2501200010355', '2501200011654', '2501200012845',
+                  '2501200013059', '2501200013133', '2501500010855', 'NA'],
+, ordered=False): 1, CategoricalDtype(categories=['2023_01001001', '2023_01001002', '2023_01001003',
+                  '2023_01001008', '2023_01001009', '2023_01001010',
+                  '2023_01001016', '2023_01001019', '2023_01001020',
+                  '2023_01001022',
+                  ...
+                  '2023_25015004', '2023_25015005', '2023_25015007',
+                  '2023_25015008', '2023_25015009', '2023_25015011',
+                  '2023_25015012', '2023_25015013', '2023_25015014',
+                  '2023_25015015'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '10', '11', '12', '13', '14', '15', '16',
+                  '17', '18', '19', '2', '20', '21', '22', '23', '24', '25',
+                  '26', '27', '28', '29', '3', '30', '31', '32', '33', '34',
+                  '35', '36', '37', '38', '39', '4', '40', '42', '43', '44',
+                  '45', '46', '48', '49', '5', '50', '51', '52', '53', '54',
+                  '55', '56', '57', '58', '59', '6', '60', '61', '62', '63',
+                  '64', '65', '67', '68', '7', '70', '73', '74', '8', '9',
+                  '99'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '10', '2', '3', '4', '5', '8'], ordered=False): 1, CategoricalDtype(categories=[' ', '1', '2', '3'], ordered=False): 1, CategoricalDtype(categories=[' ', '01:33:27', '03:13:06', '07:25:46', '07:49:12',
+                  '08:57:15', '09:03:44', '09:12:15', '09:19:25', '09:21:18',
+                  ...
+                  '21:08:37', '21:09:31', '21:11:29', '21:11:55', '21:19:48',
+                  '21:30:37', '21:39:16', '21:44:39', '21:50:06', '23:19:48'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '01:52:40', '03:26:06', '07:27:16', '08:22:23',
+                  '09:01:42', '09:14:04', '09:16:03', '09:24:01', '09:33:09',
+                  ...
+                  '21:15:23', '21:20:08', '21:21:25', '21:22:01', '21:25:24',
+                  '21:30:43', '21:46:43', '21:47:19', '22:06:56', '23:24:16'],
+, ordered=False): 1, CategoricalDtype(categories=['001 ACAMBAY DE RUÍZ CASTAÑEDA', '001 AGUASCALIENTES',
+                  '001 AHOME', '001 AMEALCO DE BONFIL', '001 COZUMEL',
+                  '002 ACUÑA', '002 AZCAPOTZALCO', '003 CARMEN', '003 LA PAZ',
+                  '003 SAN MIGUEL DE ALLENDE',
+                  ...
+                  '119 SAN ANDRÉS CHOLULA', '120 ZAPOPAN',
+                  '121 CUAUTITLÁN IZCALLI', '132 SAN MARTÍN TEXMELUCAN',
+                  '134 SAN FELIPE JALAPA DE DÍAZ', '140 SAN PEDRO CHOLULA',
+                  '164 TEPEACA', '177 TLACOTEPEC DE BENITO JUÁREZ',
+                  '199 XIUTETELCO', '212 ZAUTLA'],
+, ordered=False): 1, CategoricalDtype(categories=[               0.0, 0.1111111111111111, 0.2222222222222222,
+                  0.3333333333333333, 0.4444444444444444, 0.5555555555555556,
+                  0.6666666666666666, 0.7777777777777778, 0.8888888888888888,
+                                 1.0],
+, ordered=False): 1, CategoricalDtype(categories=[0.0, 0.125, 0.25, 0.375, 1.0], ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '10', '11', '12', '13', '14', '15', '16',
+                  '17', '18', '2', '20', '21', '22', '23', '24', '25', '26',
+                  '3', '30', '35', '4', '40', '5', '50', '6', '7', '8', '9'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '1', '2', '3', '4', '5', '6'], ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '100', '1000', '105', '110', '1150', '12',
+                  '120', '1200', '125', '1250', '13', '130', '1300', '135',
+                  '140', '1400', '150', '1500', '1556', '160', '1600', '170',
+                  '1700', '172', '175', '178', '180', '1800', '185', '190',
+                  '20', '200', '2000', '206', '215', '220', '230', '240',
+                  '2400', '25', '250', '2500', '258', '260', '280', '284',
+                  '30', '300', '3000', '320', '33', '35', '350', '380', '40',
+                  '400', '42', '420', '45', '450', '4500', '49', '50', '500',
+                  '52', '520', '550', '58', '6', '60', '600', '640', '650',
+                  '68', '70', '700', '8', '80', '800', '850', '88', '890', '9',
+                  '90', '900', '95', '956'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '1', '2', '3', '4', '5'], ordered=False): 1, CategoricalDtype(categories=[' ', '1', '3', '34', '4', '45', '5', '56', '6'], ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '10', '11', '12', '13', '15', '16', '17',
+                  '18', '19', '20', '21', '22', '23', '24', '25', '26', '27',
+                  '28', '29', '3', '30', '31', '32', '33', '34', '35', '36',
+                  '37', '38', '39', '4', '40', '41', '42', '43', '44', '45',
+                  '46', '47', '48', '49', '5', '50', '51', '52', '53', '54',
+                  '55', '56', '57', '58', '59', '6', '60', '61', '62', '63',
+                  '64', '65', '66', '67', '68', '69', '70', '71', '72', '74',
+                  '75', '76', '77', '78', '79', '8', '86', '87', '99'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '0', '1', '10', '11', '12', '13', '14', '2', '3', '37',
+                  '4', '5', '6', '7', '8', '9', '99'],
+, ordered=False): 1, CategoricalDtype(categories=[' ', '0', '100', '1000', '110', '112', '1140', '120', '1200',
+                  '130', '1300', '138', '140', '1400', '150', '1500', '1556',
+                  '160', '1600', '170', '1730', '180', '1800', '200', '2000',
+                  '2030', '210', '223', '230', '2300', '240', '250', '2500',
+                  '2700', '280', '30', '300', '3000', '3200', '350', '390',
+                  '40', '400', '4000', '425', '450', '455', '46', '50', '500',
+                  '55', '550', '580', '60', '600', '620', '645', '65', '650',
+                  '70', '700', '75', '750', '79', '80', '800', '840', '85',
+                  '850', '86', '90', '900'],
+, ordered=False): 1, CategoricalDtype(categories=['MQ348', 'MQ349', 'MQ350', 'MQ353', 'MQ355', 'MQ356',
+                  'MQ358', 'MQ360', 'MQ361', 'MQ362', 'MQ363', 'MQ400',
+                  'MQ402', 'MQ403', 'MQ404', 'MQ405', 'MQ407', 'MQ410',
+                  'MQ412', 'MQ414', 'MQ415', 'MQ416', 'MQ418', 'MQ419',
+                  'MQ420', 'MQ421', 'MQ422', 'MQ423', 'MQ426', 'MQ428',
+                  'MQ430', 'MQ432', 'MQ433', 'MQ435', 'MQ436', 'MQ437',
+                  'MQ438', 'MQ440', 'MQ442', 'MQ443', 'MQ444', 'MQ446',
+                  'MQ447', 'MQ448', 'MQ450', 'MQ452', 'MQ453', 'MQ454',
+                  'MQ455', 'MQ456', 'MQ457', 'MQ458', 'MQ459', 'MQ461',
+                  'MQ462', 'MQ463', 'MQ465', 'MQ466', 'MQ467', 'MQ468',
+                  'MQ469', 'MQ470', 'MQ472', 'MQ473', 'MQ474', 'MQ475',
+                  'MQ476', 'MQ477', 'MQ478', 'MQ479', 'MQ480', 'MQ481',
+                  'MQ482', 'MQ484', 'MQ485', 'MQ487', 'MQ488', 'MQ489',
+                  'MQ491', 'MQ492', 'MQ494', 'MQ497', 'MQ498', 'MQ723',
+                  'MQ724', 'MQ725', 'MQ726', 'MQ727', 'MQ729', 'MQ730',
+                  'MQ731', 'MQ732', 'MQ733', 'MQ734'],
+, ordered=False): 1, CategoricalDtype(categories=[0.0, 0.041666666666666664, 0.08333333333333333,
+                  0.4166666666666667, 1.0],
+, ordered=False): 1}
+INFO:src.pipeline:Missing values: 0
+INFO:src.pipeline:
+FINAL PROCESSING REPORT:
+INFO:src.pipeline:Shape change: (5569, 758) → (5569, 59)
+INFO:src.pipeline:Features retained: 7.78%
+INFO:src.pipeline:Rows retained: 100.00%
+INFO:src.pipeline:Encoders created: 97
+INFO:src.pipeline:Missing values eliminated: 159 → 0
+INFO:src.pipeline:============================================================
+INFO:src.pipeline:PIPELINE COMPLETED SUCCESSFULLY
+INFO:src.pipeline:============================================================
