@@ -136,8 +136,11 @@ ENV/
 env.bak/
 venv.bak/
 venv*/
+*venv*
 
 
+*.vscode*# Visual Studio Code settings
+*.vscode*/
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -187,3 +190,6 @@ Thumbs.db
 # .vscode-test/
 # Visual Studio Code settings
 # .vscode/settings.json
+
+# ignore all requirements.txt files in the /project directory
+/projects/**/requirements.txt
