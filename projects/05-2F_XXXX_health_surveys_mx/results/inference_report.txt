@@ -1,0 +1,15 @@
+ENSIN BAYESIAN NETWORK - INFERENCE REPORT
+==================================================
+
+Scenario: Young Female with Diabetes
+Evidence: {'edad': 'low', 'sexo': 0.0, 'a0301': 1.0}
+Result: See console output for detailed probabilities
+------------------------------
+Scenario: Older Male with Good Diet
+Evidence: {'edad': 'high', 'sexo': 1.0, 'a0701p': 1}
+Result: See console output for detailed probabilities
+------------------------------
+Scenario: Middle-aged with Depression
+Evidence: {'edad': 'medium', 'a0202': 1.0}
+Result: See console output for detailed probabilities
+------------------------------

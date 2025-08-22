@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sklearn
 from sklearn.preprocessing import LabelEncoder, KBinsDiscretizer
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import mutual_info_classif, chi2
@@ -46,6 +47,7 @@ class ENSINBayesianNetwork:
         self.edge_scores = {}
         self.encoders = {}
         self.df_processed = None
+        self.data_encoded_once = False  # Flag to prevent double encoding
         
         # Enhanced variable categories following causal epidemiological pathways
         self.variable_layers = {
@@ -135,24 +137,28 @@ class ENSINBayesianNetwork:
     
     def preprocess_data(self, discretization_method: str = 'quantile', n_bins: int = 3) -> pd.DataFrame:
         """
-        Enhanced preprocessing with multiple discretization options
+        FIXED: Enhanced preprocessing - prevents double encoding
         """
         print("Preprocessing data...")
+        
+        # Prevent double encoding - this was the main issue
+        if self.data_encoded_once and self.df_processed is not None:
+            print("Data already preprocessed, returning existing version")
+            return self.df_processed
+        
         df_processed = self.df.copy()
         
         # Handle missing values first
         for col in df_processed.columns:
             if df_processed[col].isnull().sum() > 0:
                 if df_processed[col].dtype in ['object', 'category']:
-                    # Fill categorical with mode
                     mode_val = df_processed[col].mode().iloc[0] if len(df_processed[col].mode()) > 0 else 'unknown'
                     df_processed[col].fillna(mode_val, inplace=True)
                 else:
-                    # Fill numeric with median
                     median_val = df_processed[col].median()
                     df_processed[col].fillna(median_val, inplace=True)
         
-        # Encode and discretize variables
+        # FIXED: Better encoding logic
         for col in df_processed.columns:
             try:
                 if df_processed[col].dtype == 'object':
@@ -161,35 +167,45 @@ class ENSINBayesianNetwork:
                     df_processed[col] = le.fit_transform(df_processed[col].astype(str))
                     self.encoders[col] = le
                 else:
-                    # Numeric discretization
-                    if len(df_processed[col].unique()) > n_bins:
+                    # Check if already discrete/categorical
+                    unique_vals = df_processed[col].nunique()
+                    
+                    # Only discretize if many unique values AND they're not already integer codes
+                    if unique_vals > n_bins and unique_vals > 10 and not (df_processed[col].dtype == 'int64' and df_processed[col].min() >= 0 and df_processed[col].max() < 10):
                         if discretization_method == 'quantile':
-                            df_processed[col], bins = pd.qcut(
-                                df_processed[col], 
-                                q=n_bins, 
-                                labels=False, 
-                                retbins=True, 
-                                duplicates='drop'
-                            )
+                            try:
+                                df_processed[col], bins = pd.qcut(
+                                    df_processed[col], q=n_bins, labels=False, retbins=True, duplicates='drop'
+                                )
+                                self.encoders[f"{col}_bins"] = bins
+                            except ValueError:
+                                df_processed[col], bins = pd.cut(
+                                    df_processed[col], bins=n_bins, labels=False, retbins=True
+                                )
+                                self.encoders[f"{col}_bins"] = bins
                         elif discretization_method == 'uniform':
                             df_processed[col], bins = pd.cut(
-                                df_processed[col], 
-                                bins=n_bins, 
-                                labels=False, 
-                                retbins=True
+                                df_processed[col], bins=n_bins, labels=False, retbins=True
                             )
-                        
-                        # Store binning information
-                        self.encoders[f"{col}_bins"] = bins
+                            self.encoders[f"{col}_bins"] = bins
+                    
+                    # Ensure integer type
+                    df_processed[col] = df_processed[col].astype(int)
             
             except Exception as e:
                 print(f"Warning: Could not process {col}: {e}")
-                # Keep original values if processing fails
-                pass
+                try:
+                    if df_processed[col].dtype != 'int64':
+                        df_processed[col] = pd.Categorical(df_processed[col]).codes
+                    if df_processed[col].min() < 0:
+                        df_processed[col] = df_processed[col] - df_processed[col].min()
+                except:
+                    pass
         
         self.df_processed = df_processed
+        self.data_encoded_once = True
         print(f"Data shape after preprocessing: {df_processed.shape}")
-        print(f"Encoded variables: {len(self.encoders)}")
+        print(f"Variables in processed data: {list(df_processed.columns)}")
         
         return df_processed
     
@@ -223,9 +239,9 @@ class ENSINBayesianNetwork:
                 
                 # Selective connections based on epidemiological theory
                 if self._should_connect_layers(current_layer, next_layer):
-                    # Connect key variables from current to next layer
-                    for current_var in current_vars[:5]:  # Limit connections
-                        for next_var in next_vars[:3]:
+                    # Connect key variables from current to next layer (limit connections)
+                    for current_var in current_vars[:3]:  # Max 3 from each layer
+                        for next_var in next_vars[:2]:    # Max 2 to each layer
                             edges.append((current_var, next_var))
         
         # Add specific expert knowledge connections
@@ -285,15 +301,21 @@ class ENSINBayesianNetwork:
                 available = [v for v in layer if v in self.df_processed.columns]
                 key_vars.extend(available[:3])  # Top 3 from each layer
             
-            subset_df = self.df_processed[key_vars].copy()
+            # Remove duplicates and limit total variables
+            key_vars = list(set(key_vars))[:20]  # Max 20 variables for PC
+            subset_df = self.df_processed[key_vars].copy().dropna()
+            
+            if len(subset_df) < 50:
+                print("Insufficient data for PC algorithm, using expert structure")
+                return self.create_expert_structure()
             
             # Use PC algorithm if available
-            if PC is not None:
+            try:
                 pc = PC(subset_df)
                 model = pc.estimate(significance_level=0.05)
                 edges = list(model.edges())
-            else:
-                print("PC algorithm not available, using expert structure")
+            except Exception as pc_error:
+                print(f"PC algorithm failed: {pc_error}, using expert structure")
                 edges = self.create_expert_structure()
             
             print(f"PC algorithm learned {len(edges)} edges")
@@ -324,12 +346,17 @@ class ENSINBayesianNetwork:
                 available = [v for v in layer if v in self.df_processed.columns]
                 key_vars.extend(available[:2])  # Top 2 from each layer
             
-            subset_df = self.df_processed[key_vars].copy()
+            key_vars = list(set(key_vars))[:15]  # Max 15 variables for Hill Climbing
+            subset_df = self.df_processed[key_vars].copy().dropna()
+            
+            if len(subset_df) < 50:
+                print("Insufficient data for Hill Climbing, using expert structure")
+                return self.create_expert_structure()
             
             scoring_method = BicScore(subset_df)
             hc = HillClimbSearch(subset_df)
             
-            # Start with expert structure as initial model
+            # Start with expert structure as initial model (limited)
             expert_edges = self.create_expert_structure()
             expert_edges_filtered = [(p, c) for p, c in expert_edges if p in key_vars and c in key_vars]
             
@@ -349,9 +376,13 @@ class ENSINBayesianNetwork:
     
     def create_network(self, method: str = 'expert') -> Union[BayesianNetwork, nx.DiGraph]:
         """
-        Create Bayesian Network using specified structure learning method
+        FIXED: Create network with proper node validation
         """
         print(f"Creating network using {method} method...")
+        
+        # Ensure data is preprocessed
+        if self.df_processed is None:
+            self.preprocess_data()
         
         if method == 'expert':
             edges = self.create_expert_structure()
@@ -363,37 +394,48 @@ class ENSINBayesianNetwork:
             print(f"Unknown method {method}, using expert")
             edges = self.create_expert_structure()
         
-        # Create network from edges
+        # FIXED: Critical validation - only include nodes that exist in processed data
+        valid_edges = []
+        available_vars = set(self.df_processed.columns)
+        
+        for parent, child in edges:
+            if parent in available_vars and child in available_vars:
+                valid_edges.append((parent, child))
+            else:
+                if parent not in available_vars:
+                    print(f"Warning: Parent node '{parent}' not in processed data, skipping edge ({parent}, {child})")
+                if child not in available_vars:
+                    print(f"Warning: Child node '{child}' not in processed data, skipping edge ({parent}, {child})")
+        
+        if not valid_edges:
+            print("Warning: No valid edges found, creating minimal network with available variables")
+            # Create minimal network with first few available variables
+            available_list = list(available_vars)[:5]
+            valid_edges = [(available_list[i], available_list[i+1]) for i in range(len(available_list)-1)]
+        
+        print(f"Using {len(valid_edges)} valid edges out of {len(edges)} proposed edges")
+        
+        # Create network from validated edges
         if PGMPY_AVAILABLE:
             try:
-                self.network = BayesianNetwork(edges)
+                self.network = BayesianNetwork(valid_edges)
                 
                 # Check for cycles and remove if necessary
                 if not nx.is_directed_acyclic_graph(self.network):
                     print("Removing cycles from network...")
-                    dag_edges = self._remove_cycles(edges)
+                    dag_edges = self._remove_cycles(valid_edges)
                     self.network = BayesianNetwork(dag_edges)
                 
-                print(f"Created pgmpy BayesianNetwork with {len(self.network.nodes())} nodes and {len(self.network.edges())} edges")
+                print(f"Created BayesianNetwork with {len(self.network.nodes())} nodes and {len(self.network.edges())} edges")
+                print(f"Network nodes: {sorted(list(self.network.nodes()))}")
                 
             except Exception as e:
                 print(f"Error creating pgmpy network: {e}")
-                # Fallback to NetworkX
                 self.network = nx.DiGraph()
-                self.network.add_edges_from(edges)
-                if not nx.is_directed_acyclic_graph(self.network):
-                    dag_edges = self._remove_cycles(edges)
-                    self.network = nx.DiGraph()
-                    self.network.add_edges_from(dag_edges)
+                self.network.add_edges_from(valid_edges)
         else:
-            # Use NetworkX
             self.network = nx.DiGraph()
-            self.network.add_edges_from(edges)
-            if not nx.is_directed_acyclic_graph(self.network):
-                dag_edges = self._remove_cycles(edges)
-                self.network = nx.DiGraph()
-                self.network.add_edges_from(dag_edges)
-            
+            self.network.add_edges_from(valid_edges)
             print(f"Created NetworkX DiGraph with {len(self.network.nodes())} nodes and {len(self.network.edges())} edges")
         
         return self.network
@@ -415,69 +457,137 @@ class ENSINBayesianNetwork:
         print(f"Removed {len(edges) - len(dag_edges)} edges to ensure DAG property")
         return dag_edges
     
-    def fit_parameters(self, method: str = 'mle') -> Optional[BayesianNetwork]:
+    def fit_parameters(self, method: str = 'mle', pseudo_counts: int = 1) -> Optional[BayesianNetwork]:
         """
-        Fit network parameters using Maximum Likelihood or Bayesian estimation
+        Fit network parameters using Maximum Likelihood or Bayesian estimation.
+        FIXED: More robust parameter fitting with better error handling
         """
         print(f"Fitting network parameters using {method}...")
         
-        if not PGMPY_AVAILABLE:
-            print("pgmpy not available - cannot fit parameters")
+        if not PGMPY_AVAILABLE or not isinstance(self.network, BayesianNetwork):
+            print("Cannot fit parameters: pgmpy unavailable or network invalid")
             return None
         
-        if not isinstance(self.network, BayesianNetwork):
-            print("Network is not a pgmpy BayesianNetwork - cannot fit parameters")
+        if self.df_processed is None:
+            self.preprocess_data()
+        
+        network_vars = list(self.network.nodes())
+        if not network_vars:
+            print("No nodes in network to fit")
             return None
         
-        try:
-            if self.df_processed is None:
-                self.preprocess_data()
-            
+        # Ensure all network variables are in the data
+        missing_vars = [v for v in network_vars if v not in self.df_processed.columns]
+        if missing_vars:
+            print(f"Warning: Variables {missing_vars} not in data, removing from network")
+            for var in missing_vars:
+                if self.network.has_node(var):
+                    self.network.remove_node(var)
             network_vars = list(self.network.nodes())
-            subset_df = self.df_processed[network_vars].copy()
-            
-            # Ensure all variables are properly categorized
-            for var in network_vars:
-                if subset_df[var].dtype not in ['category', 'int64']:
-                    subset_df[var] = subset_df[var].astype('category')
-            
-            # Choose estimator
-            if method == 'mle':
-                estimator = MaximumLikelihoodEstimator(self.network, subset_df)
-            else:
-                estimator = BayesianEstimator(self.network, subset_df)
-            
-            self.fitted_network = self.network.copy()
-            
-            # Fit CPDs for each node
-            successful_fits = 0
-            for node in self.network.nodes():
-                try:
+        
+        if not network_vars:
+            print("No valid nodes remaining after cleanup")
+            return None
+        
+        subset_df = self.df_processed[network_vars].copy().dropna()
+        
+        if len(subset_df) == 0:
+            print("No complete cases available for parameter fitting")
+            return None
+        
+        # Ensure all variables are properly encoded as integers
+        for var in network_vars:
+            if subset_df[var].dtype not in ['int64', 'int32']:
+                subset_df[var] = pd.Categorical(subset_df[var]).codes
+            # Ensure non-negative integers
+            if subset_df[var].min() < 0:
+                subset_df[var] = subset_df[var] - subset_df[var].min()
+        
+        self.fitted_network = self.network.copy()
+        successful_fits = 0
+        failed_nodes = []
+        
+        for node in network_vars:
+            try:
+                if method == 'mle':
+                    estimator = MaximumLikelihoodEstimator(self.network, subset_df)
                     cpd = estimator.estimate_cpd(node)
+                elif method == 'bayesian':
+                    estimator = BayesianEstimator(self.network, subset_df)
+                    cpd = estimator.estimate_cpd(node, equivalent_sample_size=pseudo_counts)
+                else:
+                    raise ValueError(f"Unknown method: {method}")
+                
+                if cpd is not None:
+                    # Ensure CPD is properly normalized
+                    cpd.normalize()
                     self.fitted_network.add_cpds(cpd)
                     successful_fits += 1
-                except Exception as e:
-                    print(f"Warning: Could not fit CPD for node {node}: {e}")
-            
-            print(f"Successfully fitted CPDs for {successful_fits}/{len(self.network.nodes())} nodes")
-            
-            # Validate model
-            try:
-                self.fitted_network.check_model()
-                print("Network validation successful!")
+                else:
+                    failed_nodes.append(node)
+                    
             except Exception as e:
-                print(f"Network validation warning: {e}")
+                print(f"Warning: Could not fit CPD for node {node}: {e}")
+                failed_nodes.append(node)
+                # Try to add a uniform CPD as fallback
+                try:
+                    uniform_cpd = self._create_uniform_cpd(node, subset_df)
+                    if uniform_cpd:
+                        self.fitted_network.add_cpds(uniform_cpd)
+                        successful_fits += 1
+                        print(f"  Added uniform CPD for {node}")
+                except Exception as uniform_error:
+                    print(f"  Failed to create uniform CPD for {node}: {uniform_error}")
+        
+        print(f"Successfully fitted CPDs for {successful_fits}/{len(network_vars)} nodes")
+        if failed_nodes:
+            print(f"Failed nodes: {failed_nodes}")
+        
+        # Validate model
+        try:
+            self.fitted_network.check_model()
+            print("Network validation successful!")
+        except Exception as e:
+            print(f"Network validation warning: {e}")
+        
+        return self.fitted_network
+    
+    def _create_uniform_cpd(self, node: str, data: pd.DataFrame) -> Optional[TabularCPD]:
+        """Create uniform CPD for a node that couldn't be fitted normally"""
+        try:
+            node_values = sorted(data[node].unique())
+            cardinality = len(node_values)
             
-            return self.fitted_network
+            parents = list(self.network.predecessors(node))
+            
+            if not parents:
+                # No parents - uniform marginal
+                values = np.ones(cardinality) / cardinality
+                cpd = TabularCPD(variable=node, variable_card=cardinality, values=values.reshape(-1, 1))
+            else:
+                # With parents - uniform conditional
+                parent_cards = [len(data[p].unique()) for p in parents if p in data.columns]
+                if not parent_cards:
+                    # Parents not in data, treat as no parents
+                    values = np.ones(cardinality) / cardinality
+                    cpd = TabularCPD(variable=node, variable_card=cardinality, values=values.reshape(-1, 1))
+                else:
+                    total_combinations = np.prod(parent_cards)
+                    values = np.ones((cardinality, total_combinations)) / cardinality
+                    cpd = TabularCPD(variable=node, variable_card=cardinality,
+                                     values=values, evidence=parents, evidence_card=parent_cards)
+            
+            cpd.normalize()
+            return cpd
             
         except Exception as e:
-            print(f"Error fitting parameters: {e}")
+            print(f"Error creating uniform CPD for {node}: {e}")
             return None
     
     def perform_inference(self, evidence: Dict[str, Union[str, int]], 
-                         query_variables: Optional[List[str]] = None) -> Optional[Dict]:
+                     query_variables: Optional[List[str]] = None) -> Optional[Dict]:
         """
-        Perform probabilistic inference on the fitted network
+        FIXED: Perform inference with better validation
         """
         if not PGMPY_AVAILABLE or self.fitted_network is None:
             print("Cannot perform inference: network not fitted or pgmpy unavailable")
@@ -486,41 +596,76 @@ class ENSINBayesianNetwork:
         try:
             inference_engine = VariableElimination(self.fitted_network)
             
-            if query_variables is None:
-                # Default query variables
-                query_variables = ['a1503', 'a1210', 'a0301']  # Nutrition, health, diabetes
-                query_variables = [var for var in query_variables if var in self.fitted_network.nodes()]
+            # FIXED: Get nodes from the actual fitted network
+            available_nodes = list(self.fitted_network.nodes())
+            print(f"Available nodes in fitted network: {sorted(available_nodes)}")
             
-            if not query_variables:
-                print("No valid query variables found")
+            # Validate and set query variables
+            if query_variables is None:
+                default_queries = ['a1503', 'a1210', 'a0301', 'a0401', 'a0701p']
+                query_variables = [var for var in default_queries if var in available_nodes]
+                
+                if not query_variables and available_nodes:
+                    # Use first 2-3 available nodes as queries
+                    query_variables = available_nodes[:min(3, len(available_nodes))]
+            
+            # FIXED: Validate ALL query variables exist
+            valid_queries = [var for var in query_variables if var in available_nodes]
+            if not valid_queries:
+                print(f"ERROR: No valid query variables found")
+                print(f"Requested: {query_variables}")
+                print(f"Available: {available_nodes}")
                 return None
             
-            # Encode evidence if necessary
-            encoded_evidence = {}
+            print(f"Using query variables: {valid_queries}")
+            
+            # FIXED: Process evidence with validation
+            processed_evidence = {}
             for var, value in evidence.items():
-                if var in self.encoders:
+                if var not in available_nodes:
+                    print(f"Warning: Evidence variable '{var}' not in network, skipping")
+                    continue
+                
+                try:
+                    # Convert to integer (all our processed data should be integers)
                     if isinstance(value, str):
-                        try:
-                            encoded_evidence[var] = self.encoders[var].transform([value])[0]
-                        except:
-                            print(f"Warning: Could not encode {var}={value}")
-                            encoded_evidence[var] = value
+                        if var in self.encoders and hasattr(self.encoders[var], 'transform'):
+                            processed_evidence[var] = int(self.encoders[var].transform([value])[0])
+                        else:
+                            processed_evidence[var] = int(float(value))
                     else:
-                        encoded_evidence[var] = value
-                else:
-                    encoded_evidence[var] = value
+                        processed_evidence[var] = int(value)
+                except (ValueError, KeyError) as e:
+                    print(f"Warning: Could not process evidence {var}={value}: {e}")
+                    continue
+            
+            if not processed_evidence:
+                print("Warning: No valid evidence could be processed")
+                # Try inference without evidence
+                print("Attempting inference without evidence...")
+            
+            print(f"Processed evidence: {processed_evidence}")
             
             # Perform inference
-            result = inference_engine.query(variables=query_variables, evidence=encoded_evidence)
+            if processed_evidence:
+                result = inference_engine.query(variables=valid_queries, evidence=processed_evidence)
+            else:
+                result = inference_engine.query(variables=valid_queries)
             
-            print(f"\nInference Results for evidence {evidence}:")
+            print(f"\nInference Results:")
             print("-" * 50)
             print(result)
             
-            return {'result': result, 'evidence': encoded_evidence, 'query_vars': query_variables}
+            return {
+                'result': result, 
+                'evidence': processed_evidence, 
+                'query_vars': valid_queries
+            }
             
         except Exception as e:
             print(f"Error in inference: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     def visualize_network(self, figsize: Tuple[int, int] = (16, 12), 
@@ -627,15 +772,30 @@ class ENSINBayesianNetwork:
             unique_layers.add(layer)
         
         legend_elements = []
+        color_map = {
+            'layer_1_demographics': '#FF6B6B',
+            'layer_2_geography_ses': '#4ECDC4', 
+            'layer_3_household': '#45B7D1',
+            'layer_4_body_perception': '#96CEB4',
+            'layer_5_mental_health': '#FFEAA7',
+            'layer_6_disease_diagnosis': '#DDA0DD',
+            'layer_7_medical_management': '#98D8C8',
+            'layer_8_dietary_patterns': '#F7DC6F',
+            'layer_9_food_consumption': '#BB8FCE',
+            'layer_10_nutritional_status': '#F1948A',
+            'layer_11_health_outcomes': '#85C1E9'
+        }
+        
         for layer in sorted(unique_layers):
-            if layer in colors:
+            if layer in color_map:
                 legend_elements.append(
                     plt.Line2D([0], [0], marker='o', color='w', 
-                              markerfacecolor=colors[layer], markersize=10, 
+                              markerfacecolor=color_map[layer], markersize=10, 
                               label=layer.replace('_', ' ').title())
                 )
         
-        plt.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5))
+        if legend_elements:
+            plt.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5))
     
     def _print_network_stats(self) -> None:
         """Print comprehensive network statistics"""
@@ -644,7 +804,9 @@ class ENSINBayesianNetwork:
         print(f"{'='*50}")
         print(f"Nodes: {len(self.network.nodes())}")
         print(f"Edges: {len(self.network.edges())}")
-        print(f"Density: {nx.density(self.network):.3f}")
+        
+        if hasattr(self.network, 'number_of_nodes') and self.network.number_of_nodes() > 1:
+            print(f"Density: {nx.density(self.network):.3f}")
         
         if isinstance(self.network, nx.DiGraph):
             print(f"Is DAG: {nx.is_directed_acyclic_graph(self.network)}")
@@ -653,40 +815,59 @@ class ENSINBayesianNetwork:
             in_degrees = dict(self.network.in_degree())
             out_degrees = dict(self.network.out_degree())
             
-            print(f"Average in-degree: {np.mean(list(in_degrees.values())):.2f}")
-            print(f"Average out-degree: {np.mean(list(out_degrees.values())):.2f}")
-            
-            # Top connected nodes
-            print(f"\nTop 5 nodes by total degree:")
-            total_degrees = {node: in_degrees[node] + out_degrees[node] 
-                            for node in self.network.nodes()}
-            top_nodes = sorted(total_degrees.items(), key=lambda x: x[1], reverse=True)[:5]
-            
-            for node, degree in top_nodes:
-                meaning = self.variable_meanings.get(node, 'Unknown variable')
-                print(f"  {node} ({meaning}): {degree} connections")
+            if in_degrees and out_degrees:
+                print(f"Average in-degree: {np.mean(list(in_degrees.values())):.2f}")
+                print(f"Average out-degree: {np.mean(list(out_degrees.values())):.2f}")
+                
+                # Top connected nodes
+                print(f"\nTop 5 nodes by total degree:")
+                total_degrees = {node: in_degrees[node] + out_degrees[node] 
+                                for node in self.network.nodes()}
+                top_nodes = sorted(total_degrees.items(), key=lambda x: x[1], reverse=True)[:5]
+                
+                for node, degree in top_nodes:
+                    meaning = self.variable_meanings.get(node, 'Unknown variable')
+                    print(f"  {node} ({meaning}): {degree} connections")
     
     def save_model(self, filepath: str) -> None:
         """Save the complete model to disk"""
         model_data = {
             'network_edges': list(self.network.edges()) if self.network else [],
-            'encoders': self.encoders,
+            'encoders': {},  # Encoders need special handling
             'variable_layers': self.variable_layers,
             'variable_meanings': self.variable_meanings,
         }
+        
+        # Save encoders with special handling for sklearn objects
+        for key, encoder in self.encoders.items():
+            if hasattr(encoder, 'classes_'):
+                model_data['encoders'][key] = {
+                    'type': 'LabelEncoder',
+                    'classes_': encoder.classes_.tolist()
+                }
+            elif isinstance(encoder, np.ndarray):
+                model_data['encoders'][key] = {
+                    'type': 'bins',
+                    'values': encoder.tolist()
+                }
         
         # Save fitted network separately if available
         if self.fitted_network and PGMPY_AVAILABLE:
             try:
                 cpds_data = []
                 for cpd in self.fitted_network.get_cpds():
-                    cpds_data.append({
+                    cpd_data = {
                         'variable': cpd.variable,
                         'variable_card': cpd.variable_card,
                         'values': cpd.get_values().tolist(),
-                        'evidence': cpd.evidence,
-                        'evidence_card': cpd.evidence_card
-                    })
+                    }
+                    
+                    if hasattr(cpd, 'evidence') and cpd.evidence:
+                        cpd_data['evidence'] = list(cpd.evidence)
+                        cpd_data['evidence_card'] = list(cpd.evidence_card)
+                    
+                    cpds_data.append(cpd_data)
+                    
                 model_data['cpds'] = cpds_data
             except Exception as e:
                 print(f"Warning: Could not save CPDs: {e}")
@@ -702,9 +883,17 @@ class ENSINBayesianNetwork:
             model_data = json.load(f)
         
         # Restore basic components
-        self.encoders = model_data.get('encoders', {})
         self.variable_layers = model_data.get('variable_layers', {})
         self.variable_meanings = model_data.get('variable_meanings', {})
+        
+        # Restore encoders
+        for key, encoder_data in model_data.get('encoders', {}).items():
+            if encoder_data.get('type') == 'LabelEncoder':
+                le = LabelEncoder()
+                le.classes_ = np.array(encoder_data['classes_'])
+                self.encoders[key] = le
+            elif encoder_data.get('type') == 'bins':
+                self.encoders[key] = np.array(encoder_data['values'])
         
         # Restore network structure
         edges = model_data.get('network_edges', [])
@@ -715,14 +904,24 @@ class ENSINBayesianNetwork:
                 # Restore CPDs if available
                 if 'cpds' in model_data:
                     for cpd_data in model_data['cpds']:
-                        cpd = TabularCPD(
-                            variable=cpd_data['variable'],
-                            variable_card=cpd_data['variable_card'],
-                            values=cpd_data['values'],
-                            evidence=cpd_data['evidence'],
-                            evidence_card=cpd_data['evidence_card']
-                        )
-                        self.network.add_cpds(cpd)
+                        try:
+                            if 'evidence' in cpd_data:
+                                cpd = TabularCPD(
+                                    variable=cpd_data['variable'],
+                                    variable_card=int(cpd_data['variable_card']),
+                                    values=cpd_data['values'],
+                                    evidence=cpd_data['evidence'],
+                                    evidence_card=cpd_data['evidence_card']
+                                )
+                            else:
+                                cpd = TabularCPD(
+                                    variable=cpd_data['variable'],
+                                    variable_card=int(cpd_data['variable_card']),
+                                    values=cpd_data['values']
+                                )
+                            self.network.add_cpds(cpd)
+                        except Exception as cpd_err:
+                            print(f"Warning: Could not load CPD for {cpd_data.get('variable')}: {cpd_err}")
                     
                     self.fitted_network = self.network
                     print("Loaded fitted network with CPDs")
@@ -730,3 +929,41 @@ class ENSINBayesianNetwork:
                     print("Loaded network structure only")
                     
             except Exception as e:
+                print(f"Error loading BayesianNetwork: {e}")
+                self.network = nx.DiGraph()
+                self.network.add_edges_from(edges)
+                print("Fallback: Loaded as NetworkX DiGraph (no CPDs)")
+        else:
+            # If pgmpy not available, fallback to simple graph
+            self.network = nx.DiGraph()
+            if edges:
+                self.network.add_edges_from(edges)
+            print("Loaded as NetworkX DiGraph")
+        
+        print(f"Model loaded from {filepath}")
+    
+    def get_network_summary(self) -> Dict:
+        """Get a comprehensive summary of the network"""
+        summary = {
+            'nodes': len(self.network.nodes()) if self.network else 0,
+            'edges': len(self.network.edges()) if self.network else 0,
+            'is_fitted': self.fitted_network is not None,
+            'data_processed': self.df_processed is not None,
+            'available_variables': list(self.df.columns) if self.df is not None else [],
+            'network_variables': list(self.network.nodes()) if self.network else [],
+        }
+        
+        if self.network and hasattr(self.network, 'nodes') and len(self.network.nodes()) > 0:
+            summary['density'] = nx.density(self.network) if hasattr(nx, 'density') else 0
+            summary['is_dag'] = nx.is_directed_acyclic_graph(self.network) if isinstance(self.network, nx.DiGraph) else False
+        
+        if self.fitted_network and PGMPY_AVAILABLE:
+            try:
+                cpds = self.fitted_network.get_cpds()
+                summary['fitted_cpds'] = len(cpds)
+                summary['cpd_variables'] = [cpd.variable for cpd in cpds]
+            except:
+                summary['fitted_cpds'] = 0
+                summary['cpd_variables'] = []
+        
+        return summary

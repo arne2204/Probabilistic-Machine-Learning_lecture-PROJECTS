@@ -1,23 +1,22 @@
 {
     "original_shape": [
         5569,
-        758
+        760
     ],
     "final_shape": [
         5569,
-        59
+        37
     ],
-    "features_retained": 0.07783641160949868,
+    "features_retained": 0.04868421052631579,
     "rows_retained": 1.0,
     "processing_steps": [
         "Missing value handling: smart",
-        "Outlier handling: iqr, removed: 13904",
+        "Outlier handling: iqr, capped: 306639",
         "Advanced feature engineering completed",
         "Normalization: minmax",
-        "Discretization: 3 bins",
-        "Feature selection: removed 719 features"
+        "Discretization: 3 bins"
     ],
-    "encoders_created": 97,
+    "encoders_created": 133,
     "mandatory_cols_in_final": [
         "edad",
         "sexo",
@@ -49,7 +48,7 @@
         "a1210"
     ],
     "data_quality_improvement": {
-        "missing_values_before": "159",
+        "missing_values_before": "3194532",
         "missing_values_after": "0",
         "duplicates_before": "0",
         "duplicates_after": "0"

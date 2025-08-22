@@ -1,0 +1,60 @@
+ENSIN BAYESIAN NETWORK ANALYSIS - FINAL REPORT
+============================================================
+
+Analysis Date: 2025-08-22 14:05:54
+Dataset Shape: (5569, 37)
+Output Directory: ensin_results_20250822_140359
+
+TRAINING SUMMARY
+------------------------------
+EXPERT:
+  Success: True
+  Training Time: 0.28s
+  Nodes: 22
+  Edges: 43
+  Parameters Fitted: True
+
+PC:
+  Success: True
+  Training Time: 35.05s
+  Nodes: 11
+  Edges: 11
+  Parameters Fitted: True
+
+HILL_CLIMB:
+  Success: True
+  Training Time: 0.36s
+  Nodes: 22
+  Edges: 43
+  Parameters Fitted: True
+
+CROSS-VALIDATION SUMMARY
+------------------------------
+EXPERT:
+  Mean Jaccard Similarity: 1.000 ± 0.000
+  Stability: High
+
+PC:
+  Mean Jaccard Similarity: 0.307 ± 0.055
+  Stability: Low
+
+FILES GENERATED
+------------------------------
+  - sample_data.csv
+  - descriptive_statistics.csv
+  - correlation_matrix.png
+  - network_comparison.csv
+  - network_comparison.png
+  - training_report.json
+  - inference_report.txt
+  - network_expert.png
+  - model_expert.json
+  - cross_validation_expert.csv
+  - network_pc.png
+  - model_pc.json
+  - cross_validation_pc.csv
+  - network_hill_climb.png
+  - model_hill_climb.json
+  - cross_validation_hill_climb.csv
+
+Total files generated: 16

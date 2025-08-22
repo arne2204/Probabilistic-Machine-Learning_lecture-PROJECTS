@@ -13,6 +13,10 @@ from sklearn.metrics import classification_report, mean_squared_error
 from sklearn.feature_selection import mutual_info_classif, SelectKBest, f_classif
 import scipy.stats as stats
 import networkx as nx
+from dateutil.parser import parse
+from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
+from sklearn.preprocessing import LabelEncoder
+import sklearn
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -27,9 +31,6 @@ class EnhancedDataPipeline:
     """
     
     def __init__(self, config: Optional[Dict] = None):
-        """
-        Initialize the pipeline with configuration parameters
-        """
         self.config = config or self._get_default_config()
         self.df_original = None
         self.df_processed = None
@@ -39,36 +40,29 @@ class EnhancedDataPipeline:
         
         # Define mandatory columns for health analysis
         self.mandatory_cols = [
-            # Demographics
-            'edad', 'sexo', 'estrato', 'x_region',
-            # Weight management
-            'a0104', 'a0107', 'a0108', 'a0109',
-            # Mental health
-            'a0202', 'a0203', 'a0204', 'a0205', 'a0206', 'a0207',
-            # Disease diagnosis
-            'a0301', 'a0401', 'a0604',
-            # Medical management
-            'a0303num', 'a0306e', 'a0406e', 'a0410a', 'a0410b', 'a0410c',
-            # Dietary patterns
-            'a0701p', 'a0702p', 'a0703p',
-            # Nutritional status and outcomes
-            'a1503', 'a1210'
+        'edad', 'sexo', 'estrato', 'x_region',
+        'a0104', 'a0107', 'a0108', 'a0109',
+        'a0202', 'a0203', 'a0204', 'a0205', 'a0206', 'a0207',
+        'a0301', 'a0401', 'a0604',
+        'a0303num', 'a0306e', 'a0406e', 'a0410a', 'a0410b', 'a0410c',
+        'a0701p', 'a0702p', 'a0703p',
+        'a1503', 'a1210'
         ]
     
     def _get_default_config(self) -> Dict:
-        """Get default configuration parameters"""
         return {
-            'outlier_method': 'iqr',  # 'iqr', 'zscore', 'isolation_forest'
-            'outlier_threshold': 1.5,
-            'missing_threshold': 0.5,  # Drop columns with >50% missing
-            'cardinality_threshold': 0.9,  # Drop if >90% unique values
-            'entropy_threshold': 0.05,  # Relative to max entropy
-            'feature_importance_threshold': 0.01,
-            'similarity_threshold': 0.6,
-            'rare_category_threshold': 0.01,
-            'normalization_method': 'minmax',  # 'minmax', 'standard', 'robust'
-            'discretization_bins': 3,
-            'random_state': 42
+        'outlier_method': 'iqr',
+        'outlier_threshold': 1.5,
+        'missing_threshold': 0.5,
+        'cardinality_threshold': 0.9,
+        'entropy_threshold': 0.05,
+        'feature_importance_threshold': 0.01,
+        'similarity_threshold': 0.6,
+        'rare_category_threshold': 0.01,
+        'normalization_method': 'minmax',
+        'discretization_bins': 3,
+        'random_state': 42,
+        'data_folder': "./data"
         }
     
     def load_data(self, filepath: str) -> pd.DataFrame:
@@ -77,6 +71,7 @@ class EnhancedDataPipeline:
         
         try:
             self.df_original = pd.read_csv(filepath, sep=";")
+            self.df_original = self.df_original.replace(r'^\s*$', np.nan, regex=True)
             logger.info(f"Data loaded successfully. Shape: {self.df_original.shape}")
             
             # Initial data quality report
@@ -164,6 +159,7 @@ class EnhancedDataPipeline:
                     df[col].replace('nan', 'missing', inplace=True)
                     
                     # Replace empty strings '' with 'NA'
+                    df[col].replace(' ', 'missing', inplace=True)
                     df[col].replace('', 'missing', inplace=True)
                     
                     # Fill remaining NaNs with 'missing' as fallback
@@ -198,74 +194,49 @@ class EnhancedDataPipeline:
         return df
     
     def detect_and_handle_outliers(self, df: pd.DataFrame, method: str = None) -> pd.DataFrame:
-        """
-        Enhanced outlier detection and handling
-        """
         method = method or self.config['outlier_method']
         logger.info(f"Detecting and handling outliers using {method} method...")
-        
         df = df.copy()
         numeric_cols = df.select_dtypes(include=[np.number]).columns
-        outliers_removed = 0
+        outliers_capped = 0
+        
         
         if method == 'iqr':
             for col in numeric_cols:
-                if col not in self.mandatory_cols:  # Don't remove outliers from key variables
-                    Q1 = df[col].quantile(0.25)
-                    Q3 = df[col].quantile(0.75)
+                if col not in self.mandatory_cols:
+                    Q1, Q3 = df[col].quantile([0.25, 0.75])
                     IQR = Q3 - Q1
-                    lower_bound = Q1 - self.config['outlier_threshold'] * IQR
-                    upper_bound = Q3 + self.config['outlier_threshold'] * IQR
-                    
-                    outliers_mask = (df[col] < lower_bound) | (df[col] > upper_bound)
-                    outliers_removed += outliers_mask.sum()
-                    
-                    # Cap outliers instead of removing (more conservative)
-                    df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
+                    lower, upper = Q1 - self.config['outlier_threshold']*IQR, Q3 + self.config['outlier_threshold']*IQR
+                    mask = (df[col] < lower) | (df[col] > upper)
+                    outliers_capped += mask.sum()
+                    df[col] = df[col].clip(lower, upper)
+        
         
         elif method == 'zscore':
             from scipy import stats
             for col in numeric_cols:
                 if col not in self.mandatory_cols:
-                    z_scores = np.abs(stats.zscore(df[col]))
-                    outliers_mask = z_scores > 3
-                    outliers_removed += outliers_mask.sum()
-                    
-                    # Remove or cap outliers
-                    df = df[~outliers_mask]
+                    z = np.abs(stats.zscore(df[col].fillna(df[col].median())))
+                    mask = z > 3
+                    outliers_capped += mask.sum()
+                    df[col] = np.where(mask, df[col].median(), df[col])
+    
         
-        elif method == 'isolation_forest':
-            from sklearn.ensemble import IsolationForest
-            iso_forest = IsolationForest(contamination=0.1, random_state=self.config['random_state'])
-            
-            # Apply only to numeric columns
-            if len(numeric_cols) > 0:
-                outlier_labels = iso_forest.fit_predict(df[numeric_cols])
-                outliers_mask = outlier_labels == -1
-                outliers_removed = outliers_mask.sum()
-                df = df[~outliers_mask]
-        
-        logger.info(f"Handled {outliers_removed} outliers using {method}")
-        self.processing_log.append(f"Outlier handling: {method}, removed: {outliers_removed}")
-        
+        logger.info(f"Capped {outliers_capped} outliers")
+        self.processing_log.append(f"Outlier handling: {method}, capped: {outliers_capped}")
         return df
 
     def infer_and_convert_df(self, df: pd.DataFrame, min_samples=5) -> pd.DataFrame:
         def infer_column_type(series):
-            # Drop missing and empty strings
             s = series.dropna().replace('', np.nan).dropna()
             if len(s) < min_samples:
-                return 'string'  # Default to string if too few samples
-    
-            # Numeric check
+                return 'string'
             try:
                 pd.to_numeric(s)
                 return 'numeric'
             except:
                 pass
-    
-            # Date/time check
-            date_count = 0
+                date_count = 0
             for val in s:
                 try:
                     parse(str(val), fuzzy=False)
@@ -274,34 +245,22 @@ class EnhancedDataPipeline:
                     continue
             if date_count / len(s) >= 0.8:
                 return 'datetime_or_time'
-    
-            # Categorical check (low cardinality)
             if s.nunique() / len(s) < 0.5:
                 return 'categorical'
-    
             return 'string'
-    
-        cols_to_drop = []
-    
+        
+        
         for col in df.columns:
             true_type = infer_column_type(df[col])
-    
-            # Drop pure datetime/time columns
-            if true_type == 'datetime_or_time':
-                sample_val = str(df[col].dropna().iloc[0]) if df[col].dropna().any() else ''
-                if ':' in sample_val or '/' in sample_val:
-                    cols_to_drop.append(col)
-                    continue
-    
-            # Convert types
             if true_type == 'numeric':
                 df[col] = pd.to_numeric(df[col], errors='coerce')
             elif true_type == 'datetime_or_time':
-                df[col] = pd.to_datetime(df[col], errors='coerce', dayfirst=True)
+                # Instead of dropping, extract useful parts
+                df[f'{col}_year'] = pd.to_datetime(df[col], errors='coerce').dt.year
+                df[f'{col}_month'] = pd.to_datetime(df[col], errors='coerce').dt.month
+                df = df.drop(columns=[col])
             elif true_type in ['categorical', 'string']:
-                df[col] = df[col].astype(str).replace('nan', 'NA').replace('', 'NA')
-    
-        df = df.drop(columns=cols_to_drop)
+                df[col] = df[col].astype(str).replace(['nan', ''], 'NA')
         return df
        
     
@@ -404,62 +363,52 @@ class EnhancedDataPipeline:
         return df
     
     def intelligent_feature_selection(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Enhanced feature selection using multiple methods
-        """
         logger.info("Performing intelligent feature selection...")
         df = df.copy()
-        
-        # 1. Remove constant and near-constant features
-        constant_cols = []
-        for col in df.columns:
-            if col not in self.mandatory_cols:
-                unique_ratio = df[col].nunique() / len(df)
-                if unique_ratio < 0.01:  # Less than 1% unique values
-                    constant_cols.append(col)
-        
+    
+        # Remove constant/near-constant features
+        constant_cols = [col for col in df.columns if col not in self.mandatory_cols and df[col].nunique()/len(df) < 0.01]
         df = df.drop(columns=constant_cols)
-        logger.info(f"Removed {len(constant_cols)} constant/near-constant columns")
-        
-        # 2. Remove high-cardinality categorical variables
+    
+        # Remove high-cardinality columns
         high_card_cols = []
         for col in df.select_dtypes(include=['object', 'category']).columns:
             if col not in self.mandatory_cols:
-                unique_ratio = df[col].nunique() / len(df)
-                if unique_ratio > self.config['cardinality_threshold']:
+                if df[col].nunique() > 50 and df[col].nunique()/len(df) > self.config['cardinality_threshold']:
                     high_card_cols.append(col)
-        
         df = df.drop(columns=high_card_cols)
-        logger.info(f"Removed {len(high_card_cols)} high-cardinality columns")
-        
-        # 3. Correlation-based feature removal
+    
+        # Remove highly correlated features
         numeric_cols = df.select_dtypes(include=[np.number]).columns
         if len(numeric_cols) > 1:
-            corr_matrix = df[numeric_cols].corr().abs()
-            upper_triangle = corr_matrix.where(
-                np.triu(np.ones(corr_matrix.shape), k=1).astype(bool)
-            )
-            
-            # Find highly correlated pairs
-            high_corr_cols = []
-            for col in upper_triangle.columns:
-                if col not in self.mandatory_cols:
-                    if any(upper_triangle[col] > 0.95):  # 95% correlation threshold
-                        high_corr_cols.append(col)
-            
-            df = df.drop(columns=high_corr_cols)
-            logger.info(f"Removed {len(high_corr_cols)} highly correlated columns")
-        
-        # 4. Mutual information-based selection for key targets
-        key_targets = ['a1503', 'a1210', 'a0301']  # Nutrition, health, diabetes
-        key_targets = [target for target in key_targets if target in df.columns]
-        
-        if key_targets:
-            self._perform_mutual_info_selection(df, key_targets)
-        
-        self.processing_log.append(f"Feature selection: removed {len(constant_cols + high_card_cols)} features")
-        
+            corr = df[numeric_cols].corr().abs()
+            upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool))
+            to_drop = [col for col in upper.columns if any(upper[col] > 0.95)]
+            df = df.drop(columns=to_drop)
+    
+        # Mutual information analysis
+        for target in [c for c in ['a1503', 'a1210', 'a0301'] if c in df.columns]:
+            features = [c for c in df.columns if c != target]
+            X, y = df[features].copy(), df[target].copy()
+    
+            # Convert all non-numeric cols to numeric using LabelEncoder
+            for col in X.columns:
+                if X[col].dtype == 'object' or X[col].dtype.name == 'category':
+                    le = LabelEncoder()
+                    X[col] = le.fit_transform(X[col].astype(str))
+    
+            try:
+                if y.dtype.kind in 'biu':
+                    scores = mutual_info_classif(X, y, random_state=self.config['random_state'])
+                else:
+                    scores = mutual_info_regression(X, y, random_state=self.config['random_state'])
+                self.feature_importance_scores[target] = pd.Series(scores, index=features).sort_values(ascending=False)
+            except Exception as e:
+                logger.warning(f"MI failed for target {target}: {e}")
+    
         return df
+        
+        
     
     def _perform_mutual_info_selection(self, df: pd.DataFrame, targets: List[str]) -> None:
         """
