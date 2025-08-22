@@ -1,16 +1,4 @@
 #!/usr/bin/env python3
-"""
-ENSIN Bayesian Network Workflow Execution Script
-
-This script demonstrates how to execute the complete ENSIN Bayesian Network 
-analysis workflow using the ENSINNetworkTrainer class.
-
-Usage Examples:
-    python run_ensin_workflow.py                    # Interactive menu
-    python run_ensin_workflow.py --full            # Full workflow
-    python run_ensin_workflow.py --quick           # Quick demo
-    python run_ensin_workflow.py --custom data.csv # Custom data analysis
-"""
 
 import os
 import sys
@@ -82,16 +70,11 @@ def check_requirements():
 
 
 def example_1_full_workflow():
-    """
-    Example 1: Complete workflow with sample data
-    This runs all analysis steps with generated sample data
-    """
     print("\n" + "="*60)
     print("EXAMPLE 1: FULL WORKFLOW WITH SAMPLE DATA")
     print("="*60)
     
-    print("This example will:")
-    print("• Generate 5000 sample ENSIN records")
+    print("This will:")
     print("• Train 3 different Bayesian networks (Expert, PC, Hill Climb)")
     print("• Compare network structures")
     print("• Demonstrate probabilistic inference")
@@ -124,7 +107,6 @@ def example_2_quick_demo():
     print("="*60)
     
     print("This quick demo will:")
-    print("• Generate 1000 sample records")
     print("• Train one expert-based network")
     print("• Create basic visualization")
     print("\nExpected runtime: 30 seconds")
@@ -230,7 +212,6 @@ def example_4_custom_analysis():
     print("="*60)
     
     print("This example shows how to customize the analysis:")
-    print("• Custom discretization parameters")
     print("• Specific variable selection")
     print("• Custom inference scenarios")
     
@@ -300,7 +281,6 @@ def example_5_batch_processing():
     print("="*60)
     
     print("This example simulates batch processing of multiple datasets:")
-    print("• Creates 3 different synthetic datasets")
     print("• Processes each independently")
     print("• Compares results across datasets")
     

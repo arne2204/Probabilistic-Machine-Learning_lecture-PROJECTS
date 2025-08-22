@@ -4,7 +4,7 @@ The necessary requirements for the successfull running of the project, install t
 
 The process the data use: project/process_data.py -> the proessed data wll be saved in the project/data folder
 
-To train the model and see the results use: project/train_model.py
+To train the model and see the results use: project/train_model.py (When prompted choose option 1)
 
 Important files:
 - final_report.ipynb
