@@ -1,0 +1,26 @@
+/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/causal_env_py39/lib64/python3.9/site-packages/networkx/utils/backends.py:135: RuntimeWarning: networkx backend defined more than once: nx-loopback
+  backends.update(_get_backends("networkx.backends"))
+INFO:src.pipeline:============================================================
+INFO:src.pipeline:STARTING ENHANCED ENSIN DATA PREPROCESSING PIPELINE
+INFO:src.pipeline:============================================================
+INFO:src.pipeline:Loading data from ~/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/data/adultos_ensanut2023_w_n.csv
+INFO:src.pipeline:Data loaded successfully. Shape: (5569, 758)
+INFO:src.pipeline:Data Quality Report:
+INFO:src.pipeline:  Shape: (5569, 758)
+INFO:src.pipeline:  Missing values: 0.00%
+INFO:src.pipeline:  Duplicate rows: 0
+INFO:src.pipeline:  High cardinality columns: 5
+INFO:src.pipeline:  Constant columns: 119
+INFO:src.pipeline:  Mandatory columns present: 28/28
+Traceback (most recent call last):
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/process_data.py", line 8, in <module>
+    main()
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/process_data.py", line 5, in main
+    pl.run_complete_pipeline("~/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/data/adultos_ensanut2023_w_n.csv")
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/src/pipeline.py", line 567, in run_complete_pipeline
+    df = self.infer_and_convert_df(df)
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/src/pipeline.py", line 287, in infer_and_convert_df
+    true_type = infer_column_type(df[col])
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/src/pipeline.py", line 257, in infer_column_type
+    if len(s) < min_samples:
+NameError: name 'min_samples' is not defined

@@ -1,0 +1,8 @@
+ENSIN Layered Bayesian Network Analysis with Pruning & Inference
+============================================================
+Traceback (most recent call last):
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/train_model.py", line 60, in <module>
+    main()
+  File "/home/sc.uni-leipzig.de/ci72buri/projects/Probabilistic-Machine-Learning_lecture-PROJECTS/projects/05-2F_XXXX_health_surveys_mx/project/train_model.py", line 10, in main
+    inspect_data()
+NameError: name 'inspect_data' is not defined
