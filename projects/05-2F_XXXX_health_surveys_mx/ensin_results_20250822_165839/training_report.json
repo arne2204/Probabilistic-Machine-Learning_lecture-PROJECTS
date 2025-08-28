@@ -1,0 +1,23 @@
+{
+    "expert": {
+        "training_time": 0.2635459899902344,
+        "nodes": 22,
+        "edges": 43,
+        "fitted": true,
+        "success": true
+    },
+    "pc": {
+        "training_time": 48.80785298347473,
+        "nodes": 13,
+        "edges": 12,
+        "fitted": true,
+        "success": true
+    },
+    "hill_climb": {
+        "training_time": 0.23618459701538086,
+        "nodes": 22,
+        "edges": 43,
+        "fitted": true,
+        "success": true
+    }
+}

@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=train
+#SBATCH --nodes=1         
+#SBATCH --ntasks=1
+#SBATCH --gpus-per-task=1       
+#SBATCH --cpus-per-task=1      
+#SBATCH --mem=32G
+#SBATCH --partition=paula
+#SBATCH --time=1:00:00
+
+module load OpenSSL/1.1
+module load bzip2/1.0.8-GCCcore-8.3.0
+
+source project/causal_env_py39/bin/activate
+
+python -c "import sklearn; print('scikit-learn version:', sklearn.__version__)"
+
+# Run the workflow and automatically skip "Press Enter" prompts
+python project/train_model.py --full < /dev/null

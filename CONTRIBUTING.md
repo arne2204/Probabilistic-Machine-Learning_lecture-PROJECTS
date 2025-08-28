@@ -1,4 +1,3 @@
-
 # Contributing Guidelines
 
 Thank you for participating in this course!
@@ -18,8 +17,7 @@ git clone https://github.com/YOUR_USERNAME/Probabilistic-Machine-Learning_lectur
 mkdir projects/your_project-id
 ```
 
-4. Add your work under this folder.
-
+4. Add your work under that folder.
 5. Commit your changes:
 
 ```bash
@@ -36,11 +34,14 @@ git push origin main
 - Push regular small commits.
 - Write clear commit messages.
 - Use consistent file naming (no spaces; use `_` instead).
+- Keep your requirements.txt file updated
+- Add your progress in the report file frequently
 
 ## File Structure Example
 
 ```
 projects/your_project-id/
+├── report/
 ├── notebooks/
 ├── scripts/
 ├── data/

@@ -1,0 +1,62 @@
+# R ----------------------------------------------------
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+.Rproj.user/
+.Rproj.user
+*.Rproj
+.Renv
+
+# R packages and compiled output
+.Rcheck/
+*.Rcheck/
+*.Rds
+*.rds
+*.RData
+*.rdata
+*.o
+*.so
+*.dll
+
+# R package buld artifacts
+*.tar.gz
+*.zip
+*.egg-info/
+*.pyc
+__pycache__/
+
+# renv (if using)
+renv/library/
+renv/staging/
+renv/python/
+
+# Targets or drake packages (if used)
+_targets/
+*_cache/
+
+# Quarto ------------------------------------------------
+# Quarto render output
+*.html
+*.pdf
+*.docx
+*.odt
+*.epub
+*.ipynb
+*.md
+_site/
+*.utf8.md
+
+# Quarto cache (if using knitr or quarto caching)
+_cache/
+
+# Common backup/editor files ----------------------------
+*~
+*.swp
+*.tmp
+*.bak
+*.log
+.DS_Store
+Thumbs.db
+
+

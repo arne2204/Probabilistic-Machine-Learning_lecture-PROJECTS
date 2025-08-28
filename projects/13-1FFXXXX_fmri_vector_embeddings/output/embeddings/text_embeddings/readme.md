@@ -1,0 +1,1 @@
+Storing text embeddings here

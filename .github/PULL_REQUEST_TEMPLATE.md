@@ -20,7 +20,9 @@ Please complete the following information:
 
 - [ ] I created or updated ONLY my project under `projects/my_project-id/`
 - [ ] My code runs without errors.
-- [ ] My notebook(s) and/or script(s) are properly structured and follow the project template
+- [ ] My notebook(s) and/or script(s) are properly structured and follow the project template.
+- [ ] I added all files and folders that are not absolutely necessary to my .gitignore file (such as virtual env folder, annoying ".DS_store" files, etc.)
+- [ ] My requirements.txt file is updated.
 - [ ] I have pushed all required files to properly execute the project: notebooks; data in a file or a google drive folder, with permissions; results.
 
 ## Additional Notes (optional):
